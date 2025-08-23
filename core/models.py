@@ -30,10 +30,10 @@ class Product(models.Model):
     clothesType = models.CharField(max_length=250, default=title)
     ratings = models.FloatField(blank=False, default=1.0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand')
-    colors = models.JSONField(blank=True)
-    sizes = models.JSONField(blank=True)
-    imageUrl = models.JSONField(blank=True)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand', null=True, blank=True)
+    colors = models.JSONField(default=list, blank=True)
+    sizes = models.JSONField(default=list, blank=True)
+    imageUrl = models.JSONField(default=list, blank=True)
     created_at = models.DateTimeField(default=timezone.now, blank=False)
 
     class Meta:

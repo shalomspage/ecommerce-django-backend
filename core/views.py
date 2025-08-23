@@ -5,6 +5,11 @@ from rest_framework.views import APIView
 from . import models, serializers
 from django.db.models import Count
 import random
+from rest_framework.generics import RetrieveAPIView
+from .models import Product
+from .serializers import ProductSerializer
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer
 
 QUERY_ERROR_MESSAGE = 'No query provided'
 
@@ -119,4 +124,28 @@ class FilterProductByCategory(APIView):
         else:
             return Response({'message': QUERY_ERROR_MESSAGE}, status=status.HTTP_400_BAD_REQUEST)
 
+class ProductDetail(RetrieveAPIView):
+            queryset = Product.objects.all()
+            serializer_class = ProductSerializer
+            lookup_field = 'pk' 
+class ProductListCreateView(generics.ListCreateAPIView):
+             queryset = Product.objects.all()
+             serializer_class = ProductSerializer
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+                queryset = Product.objects.all()
+                serializer_class = ProductSerializer
+                lookup_field = 'pk'
 
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if not user:
+            return Response({'detail': 'User not found'}, status=404)
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'isAdmin': user.is_staff or user.is_superuser
+        })
