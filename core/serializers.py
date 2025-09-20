@@ -14,11 +14,6 @@ class BrandSerializer(serializers.ModelSerializer):
         model = models.Brand
         fields = '__all__'
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Product
-        fields = '__all__'
-
 # ----------------------------
 # User serializer for auth
 # ----------------------------
@@ -41,8 +36,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "email", "is_staff", "is_superuser"]
 class ProductSerializer(serializers.ModelSerializer):
+    imageUrl = serializers.ListField(child=serializers.URLField(), required=False)
+
     category = serializers.PrimaryKeyRelatedField(queryset=models.Category.objects.all())
+    brand = serializers.PrimaryKeyRelatedField(queryset=models.Brand.objects.all(), allow_null=True, required=False)
 
     class Meta:
         model = models.Product
-        fields = '__all__'
+        fields = "__all__"
